@@ -1534,6 +1534,8 @@ jobs:
         run: |
           sudo apt-get install -y imagemagick
           python3 apply-branding.py
+          mkdir -p "$HOME/.gradle/init.d"
+          cp .github/patches/mecha-maven-central.init.gradle "$HOME/.gradle/init.d/"
 
       - name: Patch flutter
         run: |
@@ -1869,6 +1871,8 @@ jobs:
         run: |
           sudo apt-get install -y imagemagick
           python3 apply-branding.py
+          mkdir -p "$HOME/.gradle/init.d"
+          cp .github/patches/mecha-maven-central.init.gradle "$HOME/.gradle/init.d/"
 
       - name: Restore Maven dependencies from the ARM64 APK build
         if: ${{ inputs.branded-artifacts }}
