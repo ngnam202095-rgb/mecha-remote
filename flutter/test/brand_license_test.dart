@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hbb/common.dart' show getWindowName;
+import 'package:flutter_hbb/common/brand.dart';
 import 'package:flutter_hbb/common/license.dart';
 import 'package:flutter_hbb/common/widgets/license_panel.dart';
+import 'package:flutter_hbb/utils/multi_window_manager.dart' show WindowType;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -12,6 +15,12 @@ import 'package:http/testing.dart';
 class _RealHttpOverrides extends HttpOverrides {}
 
 void main() {
+  test('Linux window titles use the configured display name', () {
+    expect(getWindowName(overrideType: WindowType.Main), brandName);
+    expect(getWindowName(overrideType: WindowType.RemoteDesktop),
+        'Remote Desktop - $brandName');
+  }, skip: !Platform.isLinux);
+
   test('local license API follows the shared contract', () async {
     final server = await Process.start(
       Platform.isWindows ? 'python' : 'python3',
