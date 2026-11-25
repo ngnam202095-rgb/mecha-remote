@@ -280,6 +280,11 @@ jobs:
         shell: bash
         run: bash .github/patches/apply_flutter_3.44_source_patches.sh
 
+      - name: Test AI repair demo on Windows
+        if: ${{ matrix.job.arch == 'x86_64' && github.event_name == 'pull_request' }}
+        working-directory: flutter
+        run: flutter test test/repair_demo_test.dart --reporter expanded
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1
         with:

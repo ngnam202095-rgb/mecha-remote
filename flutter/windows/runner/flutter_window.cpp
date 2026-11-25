@@ -18,6 +18,7 @@
 #include <memory>
 
 #include "win32_desktop.h"
+#include "repair_channel.h"
 
 namespace {
 
@@ -103,6 +104,7 @@ bool FlutterWindow::OnCreate() {
     return false;
   }
   RegisterPlugins(flutter_controller_->engine());
+  RegisterRepairChannel(flutter_controller_->engine()->messenger(), GetHandle());
 
   flutter::MethodChannel<> channel(
     flutter_controller_->engine()->messenger(),
