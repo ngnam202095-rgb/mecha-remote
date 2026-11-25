@@ -1534,6 +1534,8 @@ jobs:
         run: |
           sudo apt-get install -y imagemagick
           python3 apply-branding.py
+          mkdir -p "$HOME/.gradle/init.d"
+          cp .github/patches/mecha-maven-central.init.gradle "$HOME/.gradle/init.d/"
 
       - name: Patch flutter
         run: |
@@ -1687,6 +1689,16 @@ jobs:
           popd
           mkdir -p signed-apk; pushd signed-apk
           mv ../rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk .
+
+      - name: Save Maven dependencies for the universal APK
+        if: ${{ inputs.branded-artifacts && matrix.job.arch == 'aarch64' }}
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            !~/.gradle/caches/modules-2/modules-2.lock
+            !~/.gradle/caches/modules-2/gc.properties
+          key: mecha-android-maven-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Store branded Android APK
         if: ${{ inputs.branded-artifacts }}
@@ -1859,6 +1871,20 @@ jobs:
         run: |
           sudo apt-get install -y imagemagick
           python3 apply-branding.py
+          mkdir -p "$HOME/.gradle/init.d"
+          cp .github/patches/mecha-maven-central.init.gradle "$HOME/.gradle/init.d/"
+
+      - name: Restore Maven dependencies from the ARM64 APK build
+        if: ${{ inputs.branded-artifacts }}
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            !~/.gradle/caches/modules-2/modules-2.lock
+            !~/.gradle/caches/modules-2/gc.properties
+          key: mecha-android-maven-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            mecha-android-maven-${{ github.run_id }}-
 
       - uses: nttld/setup-ndk@ed92fe6cadad69be94a966a7ee3271275e62f779 # v1
         with:
