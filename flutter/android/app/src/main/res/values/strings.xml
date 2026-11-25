@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Mecha Remote</string>
+    <string name="accessibility_service_description">Cho phép thiết bị khác điều khiển điện thoại bằng thao tác chạm ảo khi bạn đang chia sẻ màn hình.</string>
+    <string name="foreground_service_special_use_subtype">Duy trì kết nối từ xa đã được cho phép và hiển thị thông báo, không ghi màn hình khi chưa có sự đồng ý.</string>
+</resources>

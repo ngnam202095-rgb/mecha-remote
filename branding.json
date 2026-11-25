@@ -1,0 +1,23 @@
+{
+  "app_name": "Mecha",
+  "display_name": "Mecha Remote",
+  "package_id": "com.mecha.remote",
+  "primary_color": "#146451",
+  "logo_svg": "res/brand.svg",
+  "icon_png": "res/mecha-icon-1024.png",
+  "logo_light_svg": "res/mecha-remote-logo-sang.svg",
+  "logo_dark_svg": "res/mecha-remote-logo-toi.svg",
+  "rendezvous": "id.example.vn",
+  "relay": "relay.example.vn",
+  "server_public_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+  "license_api_base_url": "https://license.example.vn",
+  "source_url": "https://github.com/ngnam202095-rgb/mecha-remote",
+  "show_server_settings": false,
+  "plans": {
+    "free": {"month": 0, "year": 0, "address_book_max": 5, "users_max": 1},
+    "pro": {"month": 25000, "year": 200000, "devices_max": 30, "users_max": 3},
+    "team": {"month": 399000, "year": 3999000, "devices_max": 200, "users_max": 10},
+    "business": {"month": 2999000, "year": 29999000, "devices_max": 1000, "users_max": 50},
+    "enterprise": {"month": 4999000, "year": 49999000, "devices_max": null, "users_max": 100}
+  }
+}

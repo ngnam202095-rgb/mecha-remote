@@ -1,0 +1,55 @@
+name: Build and publish Mecha Remote beta
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/flutter-build.yml
+    with:
+      upload-artifact: false
+      branded-artifacts: true
+
+  publish:
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    concurrency:
+      group: mecha-release-${{ github.ref }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: branded-*
+          path: artifacts
+      - name: Create pre-release with Mecha installers
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          shopt -s failglob
+          mkdir release
+          cp artifacts/branded-windows-x86_64/*-install.exe "release/mecha-remote-${TAG}-windows-x64-install.exe"
+          cp artifacts/branded-android-aarch64/*.apk "release/mecha-remote-${TAG}-android-arm64-v8a.apk"
+          cp artifacts/branded-android-universal/*.apk "release/mecha-remote-${TAG}-android-universal.apk"
+          cp LICENCE release/LICENCE
+          stat --printf='%n: %s bytes\n' release/*
+          gh release create "$TAG" --verify-tag --prerelease \
+            --title "Mecha Remote $TAG" --notes-file "docs/${TAG}.md" release/*
