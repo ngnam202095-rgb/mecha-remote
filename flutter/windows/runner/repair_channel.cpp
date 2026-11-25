@@ -215,9 +215,8 @@ class RepairChannel {
 
   void Handle(const flutter::MethodCall<>& call, std::unique_ptr<flutter::MethodResult<>> result) {
     if (call.method_name() == "eligible") {
-      const bool has_focus = Foreground(owner_) || Foreground(consent_.dialog);
       result->Success(EncodableValue(
-          IsLocalConsole() && IsWindowVisible(owner_) && !IsIconic(owner_) && has_focus));
+          IsLocalConsole() && IsWindowVisible(owner_) && !IsIconic(owner_)));
       return;
     }
     if (call.method_name() == "cancel") {
