@@ -116,7 +116,7 @@ class _RepairDemoPageState extends State<RepairDemoPage> {
     _beating = true;
     final path = _casePath;
     try {
-      if (await widget.hasRemoteClient()) {
+      if (!await _consoleAvailable()) {
         await _stop();
       } else if (!_stopped) {
         await _api!.post('$path/heartbeat',
@@ -134,11 +134,14 @@ class _RepairDemoPageState extends State<RepairDemoPage> {
     }
   }
 
+  Future<bool> _consoleAvailable() async =>
+      !_stopped &&
+      !await widget.hasRemoteClient() &&
+      await repairChannel.invokeMethod<bool>('eligible') == true &&
+      !_stopped;
+
   Future<void> _requireConsole() async {
-    if (_stopped ||
-        await widget.hasRemoteClient() ||
-        await repairChannel.invokeMethod<bool>('eligible') != true ||
-        _stopped) {
+    if (!await _consoleAvailable()) {
       throw const RepairException(
           'Hãy mở khóa máy, ngắt phiên điều khiển từ xa và dừng dịch vụ Mecha Remote trước khi thử.');
     }
