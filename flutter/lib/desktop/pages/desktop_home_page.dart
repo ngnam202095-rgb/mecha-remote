@@ -12,6 +12,8 @@ import 'package:flutter_hbb/consts.dart';
 import 'package:flutter_hbb/desktop/pages/connection_page.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_setting_page.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_tab_page.dart';
+import 'package:flutter_hbb/desktop/pages/repair_demo_api.dart';
+import 'package:flutter_hbb/desktop/pages/repair_demo_page.dart';
 import 'package:flutter_hbb/desktop/widgets/update_progress.dart';
 import 'package:flutter_hbb/models/platform_model.dart';
 import 'package:flutter_hbb/models/server_model.dart';
@@ -92,6 +94,18 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       buildTip(context),
       if (!isOutgoingOnly) buildIDBoard(context),
       if (!isOutgoingOnly) buildPasswordBoard(context),
+      if (!isIncomingOnly && repairEntryAvailable)
+        TextButton.icon(
+          icon: const Icon(Icons.healing_outlined),
+          label: const Text('Sửa máy tính AI'),
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => RepairDemoPage(
+              hasRemoteClient: () async =>
+                  !await mainGetBoolOption(kOptionStopService) ||
+                  await bind.cmGetClientsLength() > 0,
+            ),
+          )),
+        ),
       FutureBuilder<Widget>(
         future: Future.value(
             Obx(() => buildHelpCards(stateGlobal.updateUrl.value))),
