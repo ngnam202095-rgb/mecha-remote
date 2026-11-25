@@ -781,15 +781,20 @@ mod tests {
         assert_eq!(check_ws("example.com:21116"), "wss://example.com/ws/id");
         assert_eq!(check_ws("example.com:21117"), "wss://example.com/ws/relay");
         assert_eq!(check_ws("127.0.0.1:21116"), "ws://127.0.0.1:21118");
-        // with no rendezvous server set, the public fallback is not one of ours
+        // Without a custom server, a configured product default still owns its port.
         Config::set_option("custom-rendezvous-server".to_string(), "".to_string());
         let fallback = Config::get_rendezvous_server();
-        let (fallback_host, _) = split_host_port(&fallback).unwrap();
-        assert_eq!(
-            check_ws(&fallback),
-            format!("wss://{}/ws/id", fallback_host)
-        );
+        let actual = check_ws(&fallback);
         Config::set_options(options);
+        let (fallback_host, _) = split_host_port(&fallback).unwrap();
+        let port = if EXE_RENDEZVOUS_SERVER.read().unwrap().is_empty()
+            && PROD_RENDEZVOUS_SERVER.read().unwrap().is_empty()
+        {
+            ""
+        } else {
+            ":8443"
+        };
+        assert_eq!(actual, format!("wss://{fallback_host}{port}/ws/id"));
     }
     // A server-to-client frame is unmasked, so it can be put on the wire by hand: the header alone,
     // which is all it takes to ask tungstenite for the allocation, or with its payload. `head` is
