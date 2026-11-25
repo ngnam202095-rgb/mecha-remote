@@ -29,6 +29,39 @@ const _preview = 'Mecha Remote — Máy in: lỗi kết nối — [đã che]';
 final repairPreviewHash = sha256.convert(utf8.encode(_preview)).toString();
 const repairPreview = _preview;
 
+String repairDemoDescription(String input) {
+  const folds = {
+    'a': 'àáảãạăằắẳẵặâầấẩẫậ',
+    'd': 'đ',
+    'e': 'èéẻẽẹêềếểễệ',
+    'i': 'ìíỉĩị',
+    'o': 'òóỏõọôồốổỗộơờớởỡợ',
+    'u': 'ùúủũụưừứửữự',
+    'y': 'ỳýỷỹỵ',
+  };
+  var text = input.toLowerCase().replaceAll(RegExp(r'[\u0300-\u036f]'), '');
+  for (final fold in folds.entries) {
+    text = text.replaceAll(RegExp('[${fold.value}]'), fold.key);
+  }
+  if (RegExp(
+          r'\b(otp|mat khau|password|token|so tai khoan|ma xac nhan)\b|\d{6,}')
+      .hasMatch(text)) {
+    throw const RepairException(
+        'Không gửi mật khẩu, mã OTP hoặc số tài khoản.');
+  }
+  const allowedDescriptions = {
+    r'\b(mute|tat tieng)\b': 'Loa bị tắt tiếng',
+    r'\b(am luong|qua nho|tieng nho)\b': 'Âm lượng quá nhỏ',
+    r'\b(loa|am thanh|mat tieng|khong nghe)\b': 'Loa không phát',
+    r'\b(dung luong|day o|o dia|o c|o he thong)\b': 'Ổ hệ thống gần đầy',
+    r'\b(may in|in giay|spooler)\b': 'Máy in không hoạt động',
+  };
+  for (final entry in allowedDescriptions.entries) {
+    if (RegExp(entry.key).hasMatch(text)) return entry.value;
+  }
+  return 'Chưa rõ loại lỗi';
+}
+
 String repairNonce() {
   final random = Random.secure();
   return List.generate(

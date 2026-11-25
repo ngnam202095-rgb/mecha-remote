@@ -168,10 +168,11 @@ class _RepairDemoPageState extends State<RepairDemoPage> {
     final text = _text.text.trim();
     if (text.isEmpty) return;
     _text.clear();
+    final demoDescription = repairDemoDescription(text);
     await _requireConsole();
     final starting = !_inProgress;
     final next = await _api!.post(starting ? '/cases' : '$_casePath/messages',
-        {'text': text, if (starting) 'notice_version': 'demo/1'});
+        {'text': demoDescription, if (starting) 'notice_version': 'demo/1'});
     if (!mounted || _stopped) return;
     if (starting) {
       _questions.clear();
@@ -342,7 +343,7 @@ class _RepairDemoPageState extends State<RepairDemoPage> {
             CheckboxListTile(
               value: _notice,
               title: const Text(
-                  'Tôi đồng ý gửi mô tả và các chỉ số đã cho phép đến máy chủ thử trên máy này.'),
+                  'Tôi đồng ý gửi loại lỗi và các chỉ số đã cho phép đến máy chủ thử trên máy này. Nội dung gõ không được gửi đi.'),
               onChanged: controls
                   ? (value) => setState(() => _notice = value == true)
                   : null,

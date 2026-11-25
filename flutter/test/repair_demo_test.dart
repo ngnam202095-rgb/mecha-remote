@@ -98,6 +98,16 @@ void main() {
     RepairApi('http://127.0.0.1:8000').close();
   });
 
+  test('T09: the demo never forwards a typed description', () {
+    expect(repairDemoDescription('Loa tắt tiếng, email ten@example.invalid'),
+        'Loa bị tắt tiếng');
+    expect(repairDemoDescription('Ổ hệ thống gần đầy'), 'Ổ hệ thống gần đầy');
+    expect(repairDemoDescription('Lỗi khác kèm thông tin cá nhân'),
+        'Chưa rõ loại lỗi');
+    expect(() => repairDemoDescription('OTP 123456'),
+        throwsA(isA<RepairException>()));
+  });
+
   testWidgets('Dừng ngay remains available before a demo session opens',
       (tester) async {
     await tester.pumpWidget(
