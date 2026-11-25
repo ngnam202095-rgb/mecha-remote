@@ -49,10 +49,11 @@ String repairDemoDescription(String input) {
     throw const RepairException(
         'Không gửi mật khẩu, mã OTP hoặc số tài khoản.');
   }
+  text = text.replaceAll(RegExp(r'\bkhong (bi )?(mute|tat tieng)\b'), '');
   const allowedDescriptions = {
     r'\b(mute|tat tieng)\b': 'Loa bị tắt tiếng',
     r'\b(am luong|qua nho|tieng nho)\b': 'Âm lượng quá nhỏ',
-    r'\b(loa|am thanh|mat tieng|khong nghe)\b': 'Loa không phát',
+    r'\b(loa|am thanh|mat tieng|khong nghe)\b': 'Sự cố loa',
     r'\b(dung luong|day o|o dia|o c|o he thong)\b': 'Ổ hệ thống gần đầy',
     r'\b(may in|in giay|spooler)\b': 'Máy in không hoạt động',
   };

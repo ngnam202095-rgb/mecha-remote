@@ -108,6 +108,11 @@ void main() {
         throwsA(isA<RepairException>()));
   });
 
+  test('Negated mute does not override a low-volume complaint', () {
+    expect(repairDemoDescription('Loa không bị tắt tiếng, âm lượng quá nhỏ'),
+        'Âm lượng quá nhỏ');
+  });
+
   testWidgets('Dừng ngay remains available before a demo session opens',
       (tester) async {
     await tester.pumpWidget(
