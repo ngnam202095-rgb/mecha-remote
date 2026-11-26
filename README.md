@@ -21,6 +21,8 @@ Các máy chủ và khóa kèm trong bản thử **không dùng để kết nố
 
 ## 3. Thử API bản quyền và danh bạ
 
+Để thử với máy chủ tự lưu trữ thay vì mock độc lập bên dưới, xem [Kết nối Mecha Remote với máy chủ cục bộ](docs/may-chu-cuc-bo.md).
+
 1. Tại thư mục gốc, chạy `python3 mock/license_server.py`. Mock chỉ lắng nghe trên `127.0.0.1:8765`; dữ liệu mất khi dừng.
 2. Đối với bản dựng thử trên máy chạy mock, áp dụng `python3 apply-branding.py --license-api http://127.0.0.1:8765` trước khi dựng. Trên Android, dùng bản debug và chạy `adb reverse tcp:8765 tcp:8765` khi thiết bị đã kết nối ADB. Gỡ tùy chọn này và chạy lại script trước khi tạo gói phát hành.
 3. Mở **Cài đặt → Bản quyền**, nhập `MECHA-DEMO-PRO`, chọn **Kích hoạt**, kiểm tra gói Pro và hạn dùng. Mở lại ứng dụng để kiểm tra trạng thái lưu; chọn **Gỡ kích hoạt máy này** để trả chỗ và về gói miễn phí.
